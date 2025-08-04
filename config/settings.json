@@ -1,0 +1,12 @@
+{
+    "break_interval": 45,
+    "hydration_interval": 120,
+    "inspiration_interval": 180,
+    "daily_summary_time": "17:00",
+    "work_start_time": "09:00",
+    "work_end_time": "18:00",
+    "notifications_enabled": true,
+    "sound_enabled": true,
+    "work_days_only": true,
+    "idle_pause_reminders": true
+}
