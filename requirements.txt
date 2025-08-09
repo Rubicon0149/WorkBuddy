@@ -31,6 +31,9 @@ typing-extensions>=4.5.0  # Enhanced type hints
 pygame>=2.5.2            # Audio playback for soundscapes
 numpy>=1.24.0            # Sound generation and processing
 
+# OpenAI client for chatbot feature
+openai>=1.30.0
+
 # Development and testing (optional)
 pytest>=7.3.0        # Testing framework
 pytest-cov>=4.1.0    # Coverage reporting
