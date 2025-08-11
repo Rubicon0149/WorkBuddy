@@ -25,6 +25,7 @@ from tracker.energy_tracker import EnergyTracker
 from tracker.soundscape_manager import FocusSoundscapeManager
 from tracker.meditation_manager import MeditationManager
 from utils.time_utils import format_duration, format_time_for_display
+from tracker.chatbot_assistant import ChatbotAssistant
 
 
 class WorkBuddyApp:
@@ -40,6 +41,7 @@ class WorkBuddyApp:
         self.energy_tracker = None
         self.soundscape_manager = None
         self.meditation_manager = None
+        self.chatbot_assistant = None
         self.is_running = False
         self.start_time = None
         
@@ -76,6 +78,11 @@ class WorkBuddyApp:
             self.soundscape_manager = FocusSoundscapeManager(self.db_manager)
             self.meditation_manager = MeditationManager(self.db_manager)
             self.scheduler = ReminderScheduler(self.db_manager, self.modal_notifier)
+            # Initialize chatbot (lazy client auth)
+            try:
+                self.chatbot_assistant = ChatbotAssistant()
+            except Exception as e:
+                print(f"⚠️ Chatbot assistant initialization failed: {e}")
             
             return True
             
@@ -130,10 +137,11 @@ class WorkBuddyApp:
                 print("4️⃣  🎧 Ambient & Soundscapes")
                 print("5️⃣  🔧 System & Testing")
                 print("6️⃣  ❓ Help & Documentation")
-                print("7️⃣  🚪 Exit WorkBuddy")
+                print("7️⃣  🤖 AI Chat Assistant")
+                print("8️⃣  🚪 Exit WorkBuddy")
                 print("─" * 60)
                 
-                choice = input("Select option (1-7): ").strip()
+                choice = input("Select option (1-8): ").strip()
                 
                 if choice == '1':
                     self._show_focus_menu()
@@ -147,10 +155,12 @@ class WorkBuddyApp:
                     self._show_system_menu()
                 elif choice == '6':
                     self._show_help_menu()
-                elif choice == '7' or choice.lower() in ['quit', 'exit', 'q']:
+                elif choice == '7':
+                    self._start_chat_assistant()
+                elif choice == '8' or choice.lower() in ['quit', 'exit', 'q']:
                     break
                 else:
-                    print("❌ Invalid choice. Please select 1-7.")
+                    print("❌ Invalid choice. Please select 1-8.")
                     
             except KeyboardInterrupt:
                 print("\n👋 Goodbye!")
@@ -159,6 +169,16 @@ class WorkBuddyApp:
                 print(f"❌ Error: {e}")
         
         self.shutdown()
+
+    def _start_chat_assistant(self) -> None:
+        """Start the AI chat assistant session."""
+        try:
+            if not self.chatbot_assistant:
+                self.chatbot_assistant = ChatbotAssistant()
+            print("\n🔐 Tip: Set environment variable OPENAI_API_KEY before starting for seamless login.")
+            self.chatbot_assistant.start_chat_session()
+        except Exception as e:
+            print(f"❌ Unable to start chat assistant: {e}")
     
     def _show_focus_menu(self) -> None:
         """Show focus and productivity menu."""
